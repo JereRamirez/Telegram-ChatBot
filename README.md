@@ -2,7 +2,7 @@
 Telegram chatbot that uses LLMs to categorize expenses and persist them in a DB
 This monorepo contains two main services for building a Telegram chatbot system:
 
-* [`ExpenseBotService`](./ExpenseBotService): A Python-based service that processes and categorizes Telegram messages using an LLM and stores data in PostgreSQL.
+* [`expense-bot-service`](./expense-bot-service): A Python-based service that processes and categorizes Telegram messages using an LLM and stores data in PostgreSQL.
 * [`connector-service`](./connector-service): A Node.js-based service that receives Telegram webhook messages and forwards them to the bot.
 
 ---
@@ -12,7 +12,7 @@ This monorepo contains two main services for building a Telegram chatbot system:
 ```
 telegram-chatbot/
 │
-├── ExpenseBotService/ # Python bot service
+├── expense-bot-service/ # Python bot service
 │   ├── app/           # Source code
 │   ├── tests/         # Unit tests
 │   └── README.md      # Bot-specific README
@@ -42,7 +42,7 @@ cd Telegram-ChatBot
 
 ## 🧱 Services Overview
 
-### 🧠 ExpenseBotService (`/ExpenseBotService`)
+### 🧠 Expense Bot Service (`/expense-bot-service`)
 
 * Python 3.11
 * FastAPI backend
@@ -51,11 +51,11 @@ cd Telegram-ChatBot
 * Modular structure: routers, services, repositories
 * Async and fully tested
 
-📍 Read the [ExpenseBotService README](./ExpenseBotService/README.md) for full details.
+📍 Read the [expense-bot-service README](./expense-bot-service/README.md) for full details.
 
 ---
 
-### 🌐 Connector-Service (`/connector-service`)
+### 🌐 Connector Service (`/connector-service`)
 
 * Node.js (ES Modules)
 * Express-based Telegram webhook handler

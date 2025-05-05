@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+requests
+python-dotenv
+pydantic
+pydantic-settings
+sqlalchemy
+asyncpg
+psycopg2-binary
+loguru
+langchain-google-genai~=2.1.4
+langchain-core~=0.3.58
