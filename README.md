@@ -1,9 +1,107 @@
-# 🧠 Telegram-ChatBot Monorepo
-Telegram chatbot that uses LLMs to categorize expenses and persist them in a DB
-This monorepo contains two main services for building a Telegram chatbot system:
+# 🧠 AI-Powered Telegram Expense Bot
 
-* [`expense-bot-service`](./expense-bot-service): A Python-based service that processes and categorizes Telegram messages using an LLM and stores data in PostgreSQL.
-* [`connector-service`](./connector-service): A Node.js-based service that receives Telegram webhook messages and forwards them to the bot.
+An end-to-end system that processes natural language expense messages from Telegram, extracts structured financial data using LLMs, and persists it for further use.
+
+This project explores what it means to integrate AI as a **core, production-facing component**;not just a development tool focusing on reliability, validation, and system design.
+
+---
+
+## 🚀 Overview
+
+Users can send messages like:
+
+> *“paid 25 usd for dinner with friends”*
+
+The system automatically extracts:
+- 💰 Amount  
+- 🏷️ Category  
+- 📝 Description  
+
+and stores the result in a PostgreSQL database.
+
+Unlike traditional rule-based systems, this project leverages an LLM to handle variability in human language while maintaining production-level safeguards.
+
+---
+
+## 🏗️ Architecture
+
+The system is split into two independent services:
+
+### 🌐 Connector Service (`/connector-service`)
+- Node.js (Express)
+- Handles Telegram webhook events  
+- Forwards user messages to the bot service  
+- Implements retry logic for resilient communication  
+
+### 🧠 Expense Bot Service (`/expense-bot-service`)
+- Python 3.11 + FastAPI  
+- Core processing layer  
+- Integrates with LLM (via LangChain)  
+- Validates and persists structured data in PostgreSQL  
+
+---
+
+## 🔄 How It Works
+
+1. User sends a message via Telegram  
+2. Connector Service receives the webhook event  
+3. Message is forwarded to the Bot Service  
+4. Bot Service:
+   - Validates and preprocesses input  
+   - Sends prompt to LLM via LangChain  
+   - Extracts structured data (`amount`, `category`, `description`)  
+   - Validates the AI response against a schema  
+5. Valid data is stored in PostgreSQL  
+6. Response is sent back to the user  
+
+---
+
+## 🧠 AI Integration Approach
+
+Instead of treating the LLM as a simple API call, the system is designed with safeguards:
+
+- **Structured prompting** → Enforces consistent JSON outputs  
+- **Validation layer** → Treats AI output as untrusted input  
+- **Encapsulation** → AI logic is isolated within the service layer  
+- **Extensibility** → Easy to swap models or providers  
+
+This ensures the system remains reliable despite the probabilistic nature of LLMs.
+
+---
+
+## ⚙️ Design Principles
+
+- **AI as a bounded dependency**  
+  AI is treated like any external system: outputs are validated and never blindly trusted  
+
+- **Separation of concerns**  
+  Transport (Telegram), processing (AI), and persistence are decoupled  
+
+- **Production-first mindset**  
+  Logging, validation, and error handling are first-class concerns  
+
+- **Modular architecture**  
+  Clean separation into routers, services, and repositories  
+
+---
+
+## ⚖️ Trade-offs
+
+| Decision | Trade-off |
+|--------|----------|
+| Use LLM instead of rules | + Flexibility, - Higher latency |
+| Strict validation layer | + Reliability, - Extra processing |
+| Decoupled services | + Scalability, - More complexity |
+
+---
+
+## 🧰 Tech Stack
+
+- **Backend (Bot Service)**: FastAPI, Python 3.11  
+- **Connector Service**: Node.js, Express  
+- **AI Layer**: LangChain + LLM (AI Studio)  
+- **Database**: PostgreSQL  
+- **Architecture**: Modular (routers, services, repositories)  
 
 ---
 
@@ -12,68 +110,57 @@ This monorepo contains two main services for building a Telegram chatbot system:
 ```
 telegram-chatbot/
 │
-├── expense-bot-service/ # Python bot service
-│   ├── app/           # Source code
-│   ├── tests/         # Unit tests
-│   └── README.md      # Bot-specific README
-│
-├── connector-service/ # Node.js Telegram connector
-│   ├── src/           # Source code
-│   ├── tests/         # Unit tests
-│   └── README.md      # Connector-specific README
-│
-└── README.md          # This file
+├── expense-bot-service/     # AI processing service (FastAPI)
+├── connector-service/       # Telegram webhook handler (Node.js)
+└── README.md
 ```
 
 ---
 
-## 🚀 Quick Start
-
-### 1. Clone the repository
+## ▶️ Getting Started
 
 ```bash
 git clone https://github.com/JereRamirez/Telegram-ChatBot.git
 cd Telegram-ChatBot
 ```
 
-### 2. Follow README instructions on each component
+Then follow setup instructions in each service:
+
+- `/expense-bot-service/README.md`  
+- `/connector-service/README.md`  
 
 ---
 
-## 🧱 Services Overview
+## 🔮 Future Improvements
 
-### 🧠 Expense Bot Service (`/expense-bot-service`)
-
-* Python 3.11
-* FastAPI backend
-* PostgreSQL for persistence
-* LLM categorization with LangChain & AI Studio
-* Modular structure: routers, services, repositories
-* Async and fully tested
-
-📍 Read the [expense-bot-service README](./expense-bot-service/README.md) for full details.
-
----
-
-### 🌐 Connector Service (`/connector-service`)
-
-* Node.js (ES Modules)
-* Express-based Telegram webhook handler
-* Forwards messages to bot and relays responses back to Telegram
-* Retry logic for resilient HTTP communication
-* Health check support
-
-📍 Read the [connector-service README](./connector-service/README.md) for full details.
+- Retry and fallback strategies for AI failures  
+- Response caching for repeated inputs  
+- Metrics and observability (latency, success rate, failure rate)  
+- Cost optimization across different LLM providers  
 
 ---
 
 ## 🤝 Contributing
 
-Pull requests and issues are welcome. Please include tests where appropriate and follow consistent coding style across both services.
+Contributions are welcome. Please:
+- Add tests where appropriate  
+- Keep code modular and consistent  
+- Follow existing structure and conventions  
 
 ---
 
 ## 📄 License
 
-MIT
+MIT  
 
+---
+
+## 💡 Why This Project
+
+This project was built to deeply understand the challenges of integrating AI into real systems:
+- Handling non-deterministic outputs  
+- Designing validation layers  
+- Balancing latency vs accuracy  
+- Building reliable AI-powered workflows  
+
+It serves as a practical exploration of **AI as part of system design**, not just a development aid.
